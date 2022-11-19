@@ -10,6 +10,8 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+const horizontalPadding = 10
+
 func GetTableStyles() table.Styles {
 	s := table.DefaultStyles()
 	s.Header = s.Header.
@@ -37,10 +39,13 @@ func CreateTableForColSelection(fields map[string]string) TableModel {
 }
 
 func createCSVColumns(fields []string) []table.Column {
+	w, _ := getScreenSize()
+
 	cols := []table.Column{}
+	maxColWidth := (w - horizontalPadding) / len(fields)
 
 	for _, field := range fields[:int(math.Min(float64(len(fields)), maxColN))] {
-		cols = append(cols, table.Column{Title: field, Width: len(field)})
+		cols = append(cols, table.Column{Title: field, Width: maxColWidth})
 	}
 
 	return cols
@@ -57,10 +62,10 @@ func createRows(data [][]string) []table.Row {
 
 func createColSelectionColumns() []table.Column {
 	w, _ := getScreenSize()
-	selectedColWidth := 8
-	otherCols := (w - selectedColWidth - 8) / 2
+	firstColWidth := 8
+	otherCols := (w - firstColWidth - horizontalPadding) / 2
 	return []table.Column{
-		{Title: "selected", Width: selectedColWidth},
+		{Title: "selected", Width: firstColWidth},
 		{Title: "col name", Width: otherCols},
 		{Title: "col desc", Width: otherCols},
 	}
