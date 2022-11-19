@@ -55,15 +55,17 @@ func (m TableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "f":
-			if len(m.selectedRows) > 0 {
-				csvTable := CreateTableForCSVData(
-					m.getSelectedRowKeys(),
-					data.FilterCSVColumns(data.LoadPlanetarySystems(false)[:100], m.selectedRows),
-				)
-				m.csvTable = &csvTable
-				return m.csvTable.Update(nil)
-			} else {
-				m.showWarning("You must select at least one column to display.")
+			if m.Mode == ColSelect {
+				if len(m.selectedRows) > 0 {
+					csvTable := CreateTableForCSVData(
+						m.getSelectedRowKeys(),
+						data.FilterCSVColumns(data.LoadPlanetarySystems(false)[:100], m.selectedRows),
+					)
+					m.csvTable = &csvTable
+					return m.csvTable.Update(nil)
+				} else {
+					m.showWarning("You must select at least one column to display.")
+				}
 			}
 		case "enter", "e":
 			if m.Mode == ColSelect {
