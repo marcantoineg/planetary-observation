@@ -1,31 +1,26 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"log"
-	"os"
 	"planetary-observation/data"
+	"planetary-observation/profiling"
 	"planetary-observation/views"
-	"runtime"
-	"runtime/pprof"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+var helpFlagValue bool
+
 func main() {
-	f, err := os.Create(".profiling/cpu.prof")
-	if err != nil {
-		panic(err)
+	if handleHelpFlag() {
+		// kills the program if help message was printed.
+		return
 	}
-	defer f.Close()
 
-	pprof.StartCPUProfile(f)
-	defer pprof.StopCPUProfile()
-
-	// for i := 0; i < 100_000; i++ {
-	// 	squared := i * i
-	// 	println(doSomething(squared))
-	// }
+	if profiling.RunCpuProfiler() {
+		defer profiling.StopCpuProfiler()
+	}
 
 	fields := data.LoadFields(false)
 	// planetarySystems := data.LoadPlanetarySystems()
@@ -33,28 +28,25 @@ func main() {
 	launchTeaApp(views.CreateTableForColSelection(fields))
 	// launchTeaApp(views.CreateTableForCSVData(planetarySystems))
 
-	runMemoryProfiler()
-}
-
-func runMemoryProfiler() {
-	f, err := os.Create(".profiling/mem.prof")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	runtime.GC() // for up-to-date stats
-	if err := pprof.WriteHeapProfile(f); err != nil {
-		log.Fatal("could not write memory profile: ", err)
-	}
-}
-
-func doSomething(squared int) int {
-	return squared + squared/3
+	profiling.RunMemoryProfiler()
 }
 
 func launchTeaApp(m tea.Model) {
 	if err := tea.NewProgram(m).Start(); err != nil {
 		panic(fmt.Sprintf("an error occured running the TUI app.\n%s", err))
 	}
+}
+
+// handleFlags creates, parse and handle the `-help` flag and retuns true if help flag is active.
+func handleHelpFlag() bool {
+	flag.BoolVar(&helpFlagValue, "h", false, "Show program information.")
+	flag.BoolVar(&helpFlagValue, "help", false, "Show program information.")
+	flag.Parse()
+	if helpFlagValue {
+		println("\nplanetary-observation - A simple TUI to view CSV data.\n")
+		println("-h - Show program information")
+		profiling.PrintFlagsHelp()
+		return true
+	}
+	return false
 }

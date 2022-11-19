@@ -2,6 +2,7 @@ run:
 	cd src && go run main.go
 
 generate-profiles:
-	make run &&\
-	go tool pprof -dot src/.profiling/cpu.prof | dot -Tsvg > src/.profiling/cpu-graph.svg &&\
-	go tool pprof -dot src/.profiling/mem.prof | dot -Tsvg > src/.profiling/mem-graph.svg
+	cd src &&\
+	go run  main.go -cpuProfiler -memProfiler &&\
+	go tool pprof -dot .profiling/cpu.prof | dot -Tsvg > .profiling/cpu-graph.svg &&\
+	go tool pprof -dot .profiling/mem.prof | dot -Tsvg > .profiling/mem-graph.svg
