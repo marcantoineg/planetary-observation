@@ -47,7 +47,7 @@ func createCSVColumns(fields []string) []table.Column {
 	w, _ := getScreenSize()
 
 	cols := []table.Column{}
-	maxColWidth := (w) / len(fields)
+	maxColWidth := (w - colsHorizontalPadding) / len(fields)
 
 	for _, field := range fields[:int(math.Min(float64(len(fields)), maxColN))] {
 		cols = append(cols, table.Column{Title: field, Width: maxColWidth})
@@ -68,7 +68,7 @@ func createRows(data [][]string) []table.Row {
 func createColSelectionColumns() []table.Column {
 	w, _ := getScreenSize()
 	firstColWidth := 8
-	otherCols := (w - firstColWidth) / 2
+	otherCols := (w - firstColWidth - colsHorizontalPadding) / 2
 	return []table.Column{
 		{Title: "selected", Width: firstColWidth},
 		{Title: "col name", Width: otherCols},
