@@ -4,9 +4,9 @@ import (
 	"math"
 
 	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/paginator"
-	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/marcantoineg/bubbles/paginator"
+	"github.com/marcantoineg/bubbles/table"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

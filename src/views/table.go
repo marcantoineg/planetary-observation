@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/paginator"
-	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/marcantoineg/bubbles/paginator"
+	"github.com/marcantoineg/bubbles/table"
 )
 
 type TableMode string
