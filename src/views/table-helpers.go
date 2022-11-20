@@ -10,7 +10,12 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-const horizontalPadding = 12
+const (
+	colsHorizontalPadding  = 12
+	tableHorizontalPadding = 10
+	tableVerticalPadding   = 10
+	rowsPerPage            = 100
+)
 
 func GetTableStyles() table.Styles {
 	s := table.DefaultStyles()
@@ -42,7 +47,7 @@ func createCSVColumns(fields []string) []table.Column {
 	w, _ := getScreenSize()
 
 	cols := []table.Column{}
-	maxColWidth := (w - horizontalPadding) / len(fields)
+	maxColWidth := (w) / len(fields)
 
 	for _, field := range fields[:int(math.Min(float64(len(fields)), maxColN))] {
 		cols = append(cols, table.Column{Title: field, Width: maxColWidth})
@@ -63,7 +68,7 @@ func createRows(data [][]string) []table.Row {
 func createColSelectionColumns() []table.Column {
 	w, _ := getScreenSize()
 	firstColWidth := 8
-	otherCols := (w - firstColWidth - horizontalPadding) / 2
+	otherCols := (w - firstColWidth) / 2
 	return []table.Column{
 		{Title: "selected", Width: firstColWidth},
 		{Title: "col name", Width: otherCols},
@@ -104,15 +109,17 @@ func createTable(cols []table.Column, rows []table.Row, mode TableMode) TableMod
 			GotoBottom: createBinding("G"),
 		}),
 		table.WithColumns(cols),
-		table.WithRows(rows[:100]),
+		table.WithRows(rows[:int(math.Min(float64(len(rows)), 100))]),
 		table.WithFocused(true),
-		table.WithWidth(w-4),
-		table.WithHeight(h-10),
+		table.WithWidth(w),
+		table.WithHeight(h-tableVerticalPadding),
 	)
+	println(w)
+	println(t.Width())
 	t.SetStyles(GetTableStyles())
 
 	p := paginator.New()
-	p.PerPage = 100
+	p.PerPage = rowsPerPage
 	p.SetTotalPages(len(rows))
 
 	return NewTableModel(t, p, mode, rows)
