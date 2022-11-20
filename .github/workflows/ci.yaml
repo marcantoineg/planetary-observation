@@ -21,13 +21,13 @@ jobs:
           go-version-file: './src/go.mod'
       
       - name: Build
+        working-directory: ./src
         run: |
-          cd src
           go get .
           go build -v ./...
 
       - name: checks
+        working-directory: ./src
         run: |
-          cd src
           go vet ./...
           go fmt ./...
