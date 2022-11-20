@@ -114,8 +114,6 @@ func createTable(cols []table.Column, rows []table.Row, mode TableMode) TableMod
 		table.WithWidth(w),
 		table.WithHeight(h-tableVerticalPadding),
 	)
-	println(w)
-	println(t.Width())
 	t.SetStyles(GetTableStyles())
 
 	p := paginator.New()
