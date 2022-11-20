@@ -11,10 +11,9 @@ import (
 )
 
 const (
-	colsHorizontalPadding  = 12
-	tableHorizontalPadding = 10
-	tableVerticalPadding   = 10
-	rowsPerPage            = 100
+	colsHorizontalPadding = 12
+	tablePadding          = 10
+	rowsPerPage           = 100
 )
 
 func GetTableStyles() table.Styles {
@@ -112,7 +111,7 @@ func createTable(cols []table.Column, rows []table.Row, mode TableMode) TableMod
 		table.WithRows(rows[:int(math.Min(float64(len(rows)), 100))]),
 		table.WithFocused(true),
 		table.WithWidth(w),
-		table.WithHeight(h-tableVerticalPadding),
+		table.WithHeight(h-tablePadding),
 	)
 	t.SetStyles(GetTableStyles())
 
