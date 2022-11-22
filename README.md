@@ -1,4 +1,5 @@
 # Planetary Observation 🪐🔭
+[![CI](https://github.com/marcantoineg/planetary-observation/actions/workflows/ci.yaml/badge.svg)](https://github.com/marcantoineg/planetary-observation/actions/workflows/ci.yaml)
 
 A simple TUI built using [Bubble Tea](https://github.com/charmbracelet/bubbletea) to visualize CSV data.
 
